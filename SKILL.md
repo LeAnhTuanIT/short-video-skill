@@ -11,7 +11,7 @@ Pipeline: kịch bản `.txt` → `make_video.py` (edge-tts đọc từng câu �
 Người dùng tạo giọng trên EverAI (web, tốc độ 0.85), gửi `mp3 + lời thoại`. Không gọi API, không clone giọng, không chạy model giọng (VieNeu) trên máy.
 1. Tách lời thoại thành file `.txt` mỗi dòng 1 cụm ngắn (ở dấu phẩy/chấm/"..."), không dòng `#`, không `[icon]`.
 2. `python3 make_video.py kichban.txt ~/Downloads/<ten>.mp4 --audio voice.mp3 --style night --no-wave --bg assets/pho-dem.mp4 --target <dài±5>`
-3. In mốc từng dòng (`align_lines`) kiểm tra: dòng nào dài/ngắn bất thường so với số chữ → gộp/tách rồi render lại.
+3. In mốc từng dòng: chạy lại lệnh trên thêm `--print-timing` (không render). Kiểm tra: dòng nào dài/ngắn bất thường so với số chữ → gộp/tách rồi render lại.
 4. Trích 1–2 khung hình kiểm tra phụ đề, báo đường dẫn + thời lượng. Không nghe thấy tiếng → thường do Mac xuất ra AirPods.
 Hướng dẫn cho người: `HUONG-DAN.md`.
 
@@ -54,7 +54,7 @@ python3 ~/.claude/skills/short-video/make_video.py kichban.txt out.mp4 \
   [--bg anh_hoac_video_nen] [--music nhac_nen.mp3] [--gap 0.35] \
   [--pitch -8Hz] [--style default|night]
 ```
-- **Giọng có sẵn:** `--audio voice.mp3` bỏ qua TTS. Kịch bản phải khớp lời đọc, mỗi dòng 1 cụm ngắn (tách ở dấu phẩy/chấm); mốc câu bắt vào chỗ ngắt hơi. In mốc ra kiểm tra, câu nào dài/ngắn bất thường thì gộp/tách dòng rồi render lại.
+- **Giọng có sẵn:** `--audio voice.mp3` bỏ qua TTS. Kịch bản phải khớp lời đọc, mỗi dòng 1 cụm ngắn (tách ở dấu phẩy/chấm); mốc câu bắt vào chỗ ngắt hơi. In mốc bằng `--print-timing` (bình thường ~12–16 ký tự/giây), câu nào dài/ngắn bất thường thì gộp/tách dòng rồi render lại.
 - **FPT.AI:** `--engine fpt --voice leminh` (nam Bắc; còn `banmai`, `thuminh` nữ Bắc, `lannhi`, `linhsan` nữ Nam, `myan` nữ Trung, `giahuy` nam Trung). Cần `export FPT_API_KEY=...` (key ở console.fpt.ai, gói Free Tier 100.000 ký tự/tháng). Không có mốc từng chữ nên karaoke chia theo độ dài chữ; `--rate` áp bằng atempo. Không bao giờ ghi key vào file skill.
 - Mọi engine đều có nhịp đọc như người (lệch nhẹ tốc độ/cao độ từng câu, nghỉ lâu sau câu hỏi) + xử lý giọng ấm, nén, vang nhẹ. Viết kịch bản theo văn nói, dùng "..." và dấu chấm giữa câu để tạo chỗ ngắt hơi.
 - Giọng nam Bắc trầm, trưởng thành (edge): `--voice vi-VN-NamMinhNeural --pitch=-8Hz --rate=-10%` (NamMinh là giọng nam vi duy nhất).

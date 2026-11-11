@@ -447,6 +447,8 @@ def main():
                     help="vieneu: giọng người thật hơn, chạy cục bộ; --voice là tên giọng VieNeu (vd \"Minh Đức\"). "
                          "fpt: FPT.AI (cần biến môi trường FPT_API_KEY); --voice leminh|banmai|thuminh|lannhi|...")
     ap.add_argument("--no-wave", action="store_true", help="night: bỏ sóng âm, chỉ giữ nền + phụ đề")
+    ap.add_argument("--print-timing", action="store_true",
+                    help="cùng --audio: in mốc từng dòng (bắt đầu, độ dài, ký tự/giây) rồi thoát, không render")
     a = ap.parse_args()
     if a.engine == "fpt" and not os.environ.get("FPT_API_KEY"):
         sys.exit("Thiếu FPT_API_KEY: lấy key ở console.fpt.ai (bật Text to Speech), rồi "
@@ -477,6 +479,12 @@ def main():
         # Giọng có sẵn: không TTS, chia mốc từng câu theo chỗ ngắt hơi trong file
         voice = a.audio
         durs, gaps = align_lines(lines, voice)
+        if a.print_timing:
+            t = 0.0
+            for l, d in zip(lines, durs):
+                print(f"{t:5.1f}s {d:4.1f}s {len(l) / d:5.1f}c/s  {l}")
+                t += d
+            return
         starts = [None] * len(lines)
     else:
         durs, concat = [], []
